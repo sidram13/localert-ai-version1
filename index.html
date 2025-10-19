@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LocaLert </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      .font-heading { font-family: 'Anton', sans-serif; }
+      .font-body { font-family: 'Poppins', sans-serif; }
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #FAF8F4; /* Light mode background */
+      }
+      .dark body {
+        background-color: #1C1A19; /* Dark mode background */
+      }
+      /* Light mode styles */
+      .btn-primary {
+        box-shadow: 5px 5px 0 0 #2C2A29;
+        transition: box-shadow 0.1s ease-in-out, transform 0.1s ease-in-out;
+      }
+      .btn-primary:hover {
+        box-shadow: 7px 7px 0 0 #2C2A29;
+        transform: translate(-2px, -2px);
+      }
+      .btn-primary:active {
+        box-shadow: 3px 3px 0 0 #2C2A29;
+        transform: translate(2px, 2px);
+      }
+       .main-card {
+        border: 4px solid #2C2A29;
+        box-shadow: 10px 10px 0 0 #2C2A29;
+      }
+
+      /* Dark mode styles */
+      .dark .btn-primary {
+        box-shadow: 5px 5px 0 0 #E5E7EB; /* gray-200 */
+      }
+      .dark .btn-primary:hover {
+        box-shadow: 7px 7px 0 0 #E5E7EB;
+      }
+      .dark .btn-primary:active {
+        box-shadow: 3px 3px 0 0 #E5E7EB;
+      }
+       .dark .main-card {
+        border: 4px solid #E5E7EB;
+        box-shadow: 10px 10px 0 0 #E5E7EB;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.25.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
+    "path": "https://aistudiocdn.com/path@^0.12.7",
+    "vite": "https://aistudiocdn.com/vite@^7.1.10",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.0.4",
+    "url": "https://aistudiocdn.com/url@^0.11.4"
+  }
+}
+</script>
+ <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <div id="alert-root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "LocaLert AI - uploaded",
+  "description": "An intelligent commute assistant that provides trip planning with Gemini and alerts you when you approach your destination, ensuring you never miss your stop.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

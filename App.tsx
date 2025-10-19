@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useCommute } from './hooks/useCommute';
@@ -1092,7 +1093,7 @@ const InteractiveMapSelector = ({ userLocation, onSelect, onClose, isMapsLoaded,
                                     <input
                                         type="text" value={editedName}
                                         onChange={(e) => setEditedName(e.target.value)}
-                                        className="flex-grow bg-white dark:bg-slate-700 border-2 border-slate-900 dark:border-slate-600 rounded-lg px-3 py-2 text-lg font-bold text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                                        className="flex-grow min-w-0 bg-white dark:bg-slate-700 border-2 border-slate-900 dark:border-slate-600 rounded-lg px-3 py-2 text-lg font-bold text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-400"
                                         autoFocus
                                     />
                                     <button type="submit" className="p-2 bg-slate-200 dark:bg-slate-600 rounded-lg border-2 border-slate-900 dark:border-slate-500 flex-shrink-0" title="Save name">

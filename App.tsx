@@ -1441,62 +1441,22 @@ const FinalAlertUI = ({ onDismiss, destinationName }: { onDismiss: () => void; d
 
   return createPortal(
     <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-sm text-center space-y-6 animate-[pulse_1.5s_cubic-bezier(0.4,0,0.6,1)_infinite]">
+      <div className="w-full max-w-sm text-center space-y-8 animate-[pulse_1.5s_cubic-bezier(0.4,0,0.6,1)_infinite]">
           <BellIcon className="w-24 h-24 text-amber-300 mx-auto" />
           <h2 className="text-7xl font-heading text-white">WAKE UP!</h2>
           <p className="text-xl text-amber-100/90">
             You are approaching: <br />
             <span className="font-bold truncate">{destinationName}</span>
           </p>
-          <MathMission onSuccess={onDismiss} />
+          <button 
+            onClick={onDismiss} 
+            className="btn-primary w-full bg-amber-400 text-slate-900 font-bold py-4 px-6 rounded-lg text-2xl border-4 border-slate-900 flex items-center justify-center gap-3"
+            aria-label="Dismiss alert"
+          >
+            <CheckCircleIcon className="w-8 h-8"/> Dismiss
+          </button>
       </div>
     </div>,
     alertRoot
   );
 }
-
-const MathMission = ({ onSuccess }: { onSuccess: () => void }) => {
-    const [num1, setNum1] = useState(0);
-    const [num2, setNum2] = useState(0);
-    const [answer, setAnswer] = useState('');
-    const [isWrong, setIsWrong] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        generateProblem();
-        inputRef.current?.focus();
-    }, []);
-
-    const generateProblem = () => {
-        setNum1(Math.floor(Math.random() * 15) + 5);
-        setNum2(Math.floor(Math.random() * 15) + 5);
-        setAnswer('');
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (parseInt(answer, 10) === num1 + num2) {
-            onSuccess();
-        } else {
-            setIsWrong(true);
-            setAnswer('');
-            setTimeout(() => setIsWrong(false), 500);
-        }
-    };
-
-    return (
-        <div className={`bg-black/40 p-6 rounded-2xl border-2 border-amber-300/50 ${isWrong ? 'animate-shake' : ''}`}>
-            <p className="text-white text-lg mb-4 font-semibold">Solve the problem to dismiss:</p>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 items-center">
-                <p className="text-5xl font-heading font-bold text-amber-200">{num1} + {num2} = ?</p>
-                <input
-                    ref={inputRef} type="number" value={answer} onChange={(e) => setAnswer(e.target.value)}
-                    className="w-40 text-center bg-white/10 dark:bg-black/20 border-2 border-amber-300 dark:border-amber-400 rounded-lg px-4 py-3 text-3xl font-bold text-white placeholder-white/50 focus:outline-none focus:ring-4 focus:ring-amber-300/50 dark:focus:ring-amber-400/50 transition-all" autoFocus
-                />
-                <button type="submit" className="btn-primary w-full bg-amber-400 text-slate-900 font-bold py-3 px-4 rounded-lg text-lg border-2 border-slate-900 flex items-center justify-center gap-2">
-                    <CheckCircleIcon className="w-6 h-6"/> Dismiss
-                </button>
-            </form>
-        </div>
-    );
-};

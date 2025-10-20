@@ -5,6 +5,7 @@ import { useCommute } from './hooks/useCommute';
 import { useCommuteHistory } from './hooks/useCommuteHistory';
 import { useTheme } from './hooks/useTheme';
 import { useLocation } from './hooks/useLocation';
+import { useWakeLock } from './hooks/useWakeLock';
 import { getCoordinatesForDestination, getDestinationSuggestions, getCoordinatesFromDescription } from './services/aiService';
 import type { Coordinates, CommuteHistoryEntry } from './types';
 
@@ -198,6 +199,12 @@ const PencilIcon = ({ className }: { className: string }) => (
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
     </svg>
 );
+const EyeIcon = ({ className }: { className: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" {...commonIconProps} className={className}>
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+    </svg>
+);
 
 
 // --- Constants for Sounds --- //
@@ -267,8 +274,24 @@ export default function App() {
   const { history, addCommuteToHistory, clearHistory } = useCommuteHistory();
   const { theme, cycleTheme } = useTheme();
   const { location: userLocation, isLoading: isGettingLocation, error: locationError, requestLocation } = useLocation();
+  const { isActive: isWakeLockActive, requestWakeLock, releaseWakeLock } = useWakeLock();
   
   const { isLoaded: isMapsLoaded, error: mapsScriptError } = useGoogleMapsScript(process.env.API_KEY || '');
+
+  // Effect to manage wake lock based on journey stage
+  useEffect(() => {
+    if (journeyStage === 'tracking') {
+      requestWakeLock();
+    } else {
+      releaseWakeLock();
+    }
+
+    // Cleanup when the component unmounts
+    return () => {
+      releaseWakeLock();
+    };
+  }, [journeyStage, requestWakeLock, releaseWakeLock]);
+
 
   // Effect to handle cleanup of blob URLs for custom sounds to prevent memory leaks.
   useEffect(() => {
@@ -372,6 +395,7 @@ export default function App() {
                 destinationName={destination.name}
                 alertDistanceKm={alertDistanceKm}
                 isPreApproaching={commute.isPreApproaching}
+                isWakeLockActive={isWakeLockActive}
             />
           );
         default:
@@ -1319,14 +1343,24 @@ const BackgroundTrackingWarning = () => (
     </div>
 );
 
-const TrackerUI = ({ distance, error, onCancel, destinationName, alertDistanceKm, isPreApproaching, accuracy }: { 
+const WakeLockActiveInfo = () => (
+    <div className="bg-green-100 dark:bg-green-900/30 border-2 border-green-500 text-green-800 dark:text-green-200 text-sm rounded-lg p-3 flex items-center gap-3 mb-4">
+        <EyeIcon className="w-8 h-8 flex-shrink-0 text-green-600 dark:text-green-400" />
+        <div>
+            <span className="font-bold">Screen Lock is Off.</span> Your device's screen will stay on during this journey to ensure tracking is not interrupted.
+        </div>
+    </div>
+);
+
+const TrackerUI = ({ distance, error, onCancel, destinationName, alertDistanceKm, isPreApproaching, accuracy, isWakeLockActive }: { 
     distance: number | null; 
     error: string | null; 
     onCancel: () => void; 
     destinationName: string; 
     alertDistanceKm: number; 
     isPreApproaching: boolean; 
-    accuracy: number | null; 
+    accuracy: number | null;
+    isWakeLockActive: boolean;
 }) => {
     const [isCalibrating, setIsCalibrating] = useState(true);
     const progress = distance !== null ? Math.max(0, 100 - (distance / (alertDistanceKm * 3)) * 100) : 0; // Visual progress starts from 3x alert distance
@@ -1351,7 +1385,7 @@ const TrackerUI = ({ distance, error, onCancel, destinationName, alertDistanceKm
 
     return (
         <div className="text-center space-y-4">
-            <BackgroundTrackingWarning />
+            {isWakeLockActive ? <WakeLockActiveInfo /> : <BackgroundTrackingWarning />}
             {isSignalWeak && !isCalibrating && (
                 <div className="bg-red-100 dark:bg-red-900/30 border-2 border-red-500 text-red-800 dark:text-red-200 text-sm rounded-lg p-3 flex items-start gap-3">
                     <AlertTriangleIcon className="w-8 h-8 flex-shrink-0 text-red-600 dark:text-red-400" />

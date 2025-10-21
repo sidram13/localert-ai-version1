@@ -39,6 +39,10 @@ Set your destination by name, by describing it in natural language, or by simply
 
 This contains everything you need to run your app locally.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e84686bc54d9039c3cd23f939c088f71bbf48a5c
 ## Run Locally
 
 **Prerequisites:** Node.js
